@@ -1,0 +1,12 @@
+-r requirements.txt
+black
+flake8
+ipykernel
+isort
+mypy
+pandas
+pandas-stubs
+pdoc3
+pylint
+pytest
+pytest-cov
