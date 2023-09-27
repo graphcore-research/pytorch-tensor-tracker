@@ -23,7 +23,7 @@ Advanced usage:
    `track(stash=lambda event: ...)`
 
  - Manually register/unregister hooks:
-  `tracker = Tracker(); tracker.register(); tracker.unregister()`
+  `tracker = Tracker(); tracker.register(...); tracker.unregister()`
 """
 
 from .core import *  # NOQA: F401 F403

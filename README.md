@@ -9,6 +9,8 @@ with tensor_tracker.track(module) as tracker:
 print(list(tracker))
 
 display(tracker.to_frame())
+
+print(tensor_tracker.__doc__)  # further usage
 ```
 
 ## License
