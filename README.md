@@ -2,6 +2,10 @@
 
 Flexibly track outputs and grad-outputs of `torch.nn.Module`.
 
+```bash
+pip install git+https://github.com/graphcore-research/pytorch-tensor-tracker
+```
+
 ```python
 with tensor_tracker.track(module) as tracker:
     module(inputs).backward()
@@ -9,8 +13,6 @@ with tensor_tracker.track(module) as tracker:
 print(list(tracker))
 
 display(tracker.to_frame())
-
-print(tensor_tracker.__doc__)  # further usage
 ```
 
 ## License
