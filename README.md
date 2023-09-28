@@ -7,6 +7,8 @@ pip install git+https://github.com/graphcore-research/pytorch-tensor-tracker
 ```
 
 ```python
+import tensor_tracker
+
 with tensor_tracker.track(module) as tracker:
     module(inputs).backward()
 
