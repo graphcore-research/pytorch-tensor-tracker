@@ -1,5 +1,31 @@
 # Copyright (c) 2023 Graphcore Ltd. All rights reserved.
 
+"""Utility for tracking activations and gradients at `nn.Module` outputs.
+
+Usage:
+
+```
+with tensor_tracker.track(model) as tracker:
+    model(inputs).backward()
+
+print(list(tracker))
+```
+
+Advanced usage:
+
+ - Filter modules based on name:
+   `track(include="<regex>", exclude="<regex>")`
+
+ - Pre-transform tracked tensors to save memory:
+   `track(stash_value=lambda t: t.std().detach().cpu())`
+
+ - Customise tracked state:
+   `track(stash=lambda event: ...)`
+
+ - Manually register/unregister hooks:
+  `tracker = Tracker(); tracker.register(...); tracker.unregister()`
+"""
+
 import dataclasses
 import re
 from dataclasses import dataclass
@@ -200,6 +226,8 @@ def track(
     tracker.register_all(module, grad=grad, include=include, exclude=exclude)
     return tracker
 
+
+track.__doc__ = __doc__
 
 __all__ = [
     "Event",
