@@ -36,21 +36,24 @@ class EgModule(nn.Module):
 def test_basic() -> None:
     module = EgModule()
     with tensor_tracker.track(module) as tracker:
+        assert str(tracker) == "Tracker(stashes=0, tracking=6)"
         x = torch.full((8,), 0.7, requires_grad=True)
         out = module(x)
         grad = torch.full_like(out.thing, 1000)
         out.thing.backward(grad)
 
+    # Tracked stashes
     sigmoid_grad = 1000 * torch.sigmoid(3 * x) * (1 - torch.sigmoid(3 * x))
     expected_stash = [
         tensor_tracker.Stash("m3", Mul3, False, 3 * x),
         tensor_tracker.Stash("sigmoid", nn.Sigmoid, False, torch.sigmoid(3 * x)),
         tensor_tracker.Stash("", EgModule, False, Output(torch.sigmoid(3 * x), "ok")),
-        # tensor_tracker.Stash("", EgModule, True, grad),
+        # tensor_tracker.Stash("", EgModule, True, grad),  # can't track dataclass grad
         tensor_tracker.Stash("sigmoid", nn.Sigmoid, True, grad),
         tensor_tracker.Stash("m3", Mul3, True, sigmoid_grad),
     ]
     assert len(tracker) == len(expected_stash)
+    assert str(tracker) == f"Tracker(stashes={len(expected_stash)}, tracking=0)"
     for i, expected in enumerate(expected_stash):
         assert tracker[i].name == expected.name
         assert tracker[i].type == expected.type
@@ -62,11 +65,16 @@ def test_basic() -> None:
         else:
             assert torch.equal(tracker[i].first_value, expected.value), expected
 
+    # Pandas output
     df = tracker.to_frame()
     assert len(df) == len(expected_stash)
     df.iloc[0] == pd.Series(
         dict(name="m3", type="test_tensor_tracker.Mul3", grad=False, value=0.0)
     )
+
+    # Reset
+    tracker.clear()
+    assert len(tracker) == 0
 
 
 def test_custom_stash_value() -> None:

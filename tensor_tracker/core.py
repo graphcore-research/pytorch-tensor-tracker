@@ -2,6 +2,11 @@
 
 """Utility for tracking activations and gradients at `nn.Module` outputs.
 
+Use `track` to start tracking a module & submodule. Then use the original module
+as usual. Your `Tracker` will be filled with a list of `Stash`es, containing
+copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
+a lot of memory.)
+
 Usage:
 
 ```
@@ -9,6 +14,10 @@ with tensor_tracker.track(model) as tracker:
     model(inputs).backward()
 
 print(list(tracker))
+# => [Stash(name="0.linear", type=nn.Linear, grad=False, value=tensor(...)),
+#     ...]
+
+display(tracker.to_frame())  # requires 'pandas'
 ```
 
 Advanced usage:
@@ -120,8 +129,9 @@ class Tracker:
         self._handles: List[torch.utils.hooks.RemovableHandle] = []
         self._stash = stash
 
+    # Registration/tracking
+
     def __enter__(self) -> "Tracker":
-        self.clear()
         return self
 
     def __exit__(
@@ -186,7 +196,10 @@ class Tracker:
             self._stash(Event(name, type(module), True, grad_output, (), {}))
         )
 
-    # Read out
+    # Read results
+
+    def __str__(self) -> str:
+        return f"Tracker(stashes={len(self)}, tracking={len(self._handles)})"
 
     def __iter__(self) -> Iterator[Stash]:
         return iter(self.stashes)
