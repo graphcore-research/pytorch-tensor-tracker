@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push: { branches: [ "main" ] }
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  # Run everything on main, most-recent on PR builds
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container: pytorch/pytorch
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run CI
+        run: ./dev ci
+      - name: Publish documentation
+        if: ${{github.ref == 'refs/heads/main'}}
+        uses: Cecilapp/GitHub-Pages-deploy@v3
+        env: { GITHUB_TOKEN: "${{ github.token }}" }
+        with:
+          build_dir: doc/tensor_tracker
