@@ -1,6 +1,6 @@
 # Tensor tracker
 
-Flexibly track outputs and grad-outputs of `torch.nn.Module`.
+Flexibly track outputs and grad-outputs of `torch.nn.Module`. [API documentation](https://graphcore-research.github.io/pytorch-tensor-tracker/).
 
 ```bash
 pip install git+https://github.com/graphcore-research/pytorch-tensor-tracker
