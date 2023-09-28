@@ -11,6 +11,8 @@ with tensor_tracker.track(module) as tracker:
     module(inputs).backward()
 
 print(list(tracker))
+# => [Stash(name="0.linear", type=nn.Linear, grad=False, value=tensor(...)),
+#     ...]
 
 display(tracker.to_frame())
 ```
