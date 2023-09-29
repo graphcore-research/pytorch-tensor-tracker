@@ -19,6 +19,8 @@ print(list(tracker))
 display(tracker.to_frame())
 ```
 
+See our example of [visualising transformer activations & gradients using UMAP](tests/Example.ipynb).
+
 ## License
 
 Copyright (c) 2023 Graphcore Ltd. Licensed under the MIT License ([LICENSE](LICENSE)).

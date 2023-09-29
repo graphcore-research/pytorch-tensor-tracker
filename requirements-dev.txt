@@ -1,8 +1,8 @@
 -r requirements.txt
 black
 flake8
-ipykernel
 isort
+jupyter
 mypy
 pandas
 pandas-stubs

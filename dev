@@ -130,6 +130,19 @@ def doc() -> None:
             "tensor_tracker",
         ]
     )
+    run(
+        [
+            "jupyter",
+            "nbconvert",
+            "--to",
+            "html",
+            "tests/Example.ipynb",
+            "--output-dir",
+            "doc/tensor_tracker",
+            "--output",
+            "example.html",
+        ]
+    )
 
 
 @cli("--skip", nargs="*", default=[], help="commands to skip")
