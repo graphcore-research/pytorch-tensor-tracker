@@ -34,7 +34,8 @@ Advanced usage:
  - Manually register/unregister hooks:
   `tracker = Tracker(); tracker.register(...); tracker.unregister()`
 
-See also: example of [visualising transformer activations & gradients using UMAP](example.html).
+See also: example of
+[visualising transformer activations & gradients using UMAP](example.html).
 """
 
 import dataclasses
