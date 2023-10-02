@@ -7,7 +7,7 @@ as usual. Your `Tracker` will be filled with a list of `Stash`es, containing
 copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
 a lot of memory.)
 
-Usage:
+Usage ([notebook](usage.html)):
 
 ```
 with tensor_tracker.track(model) as tracker:
@@ -34,8 +34,8 @@ Advanced usage:
  - Manually register/unregister hooks:
   `tracker = Tracker(); tracker.register(...); tracker.unregister()`
 
-See also: example of
-[visualising transformer activations & gradients using UMAP](example.html).
+See also: [example of
+visualising transformer activations & gradients using UMAP](example.html).
 """
 
 import dataclasses
@@ -214,16 +214,21 @@ class Tracker:
         return len(self.stashes)
 
     def to_frame(
-        self, stat: Callable[[Tensor], Tensor] = torch.std
+        self,
+        stat: Callable[[Tensor], Tensor] = torch.std,
+        stat_name: Optional[str] = None,
     ) -> "pandas.DataFrame":  # type:ignore[name-defined] # NOQA: F821
         import pandas
 
+        column_name = (
+            getattr(stat, "__name__", "value") if stat_name is None else stat_name
+        )
+
         def to_item(stash: Stash) -> Dict[str, Any]:
             d = stash.__dict__.copy()
-            first_value = stash.first_value
-            d["value"] = (
-                stat(first_value).item() if isinstance(first_value, Tensor) else None
-            )
+            d.pop("value")
+            v = stash.first_value
+            d[column_name] = stat(v).item() if isinstance(v, Tensor) else None
             d["type"] = f"{stash.type.__module__}.{stash.type.__name__}"
             return d
 

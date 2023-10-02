@@ -69,7 +69,7 @@ def test_basic() -> None:
     df = tracker.to_frame()
     assert len(df) == len(expected_stash)
     df.iloc[0] == pd.Series(
-        dict(name="m3", type="test_tensor_tracker.Mul3", grad=False, value=0.0)
+        dict(name="m3", type="test_tensor_tracker.Mul3", grad=False, std=0.0)
     )
 
     # Reset

@@ -45,7 +45,7 @@ def cli(*args: Any, **kwargs: Any) -> Callable[[T], T]:
 
 # Commands
 
-PYTHON_ROOTS = ["tensor_tracker", "tests", "dev", "setup.py"]
+PYTHON_ROOTS = ["tensor_tracker", "tests", "doc", "dev", "setup.py"]
 
 
 @cli("-s", "--no-capture", action="store_false", dest="capture")
@@ -69,7 +69,7 @@ def tests(capture: bool, filter: Optional[str]) -> None:
 def lint() -> None:
     """run static analysis"""
     run(["python3", "-m", "flake8", *PYTHON_ROOTS])
-    run(["python3", "-m", "mypy", *PYTHON_ROOTS])
+    run(["python3", "-m", "mypy", *(r for r in PYTHON_ROOTS if r != "doc")])
 
 
 @cli("--check", action="store_true")
@@ -83,7 +83,7 @@ def format(check: bool) -> None:
 def copyright() -> None:
     """check for Graphcore copyright headers on relevant files"""
     command = (
-        "find " + " ".join(PYTHON_ROOTS) + " -type f -not -name *.pyc"
+        "find " + " ".join(PYTHON_ROOTS) + " -type f -not -name *.pyc -not -name *.png"
         " | xargs grep -L 'Copyright (c) 202. Graphcore Ltd[.] All rights reserved[.]'"
     )
     print(f"$ {command}", file=sys.stderr)
@@ -130,19 +130,20 @@ def doc() -> None:
             "tensor_tracker",
         ]
     )
-    run(
-        [
-            "jupyter",
-            "nbconvert",
-            "--to",
-            "html",
-            "tests/Example.ipynb",
-            "--output-dir",
-            "doc/tensor_tracker",
-            "--output",
-            "example.html",
-        ]
-    )
+    for notebook in ["Example", "Usage"]:
+        run(
+            [
+                "jupyter",
+                "nbconvert",
+                "--to",
+                "html",
+                f"doc/{notebook}.ipynb",
+                "--output-dir",
+                "doc/tensor_tracker",
+                "--output",
+                f"{notebook.lower()}.html",
+            ]
+        )
 
 
 @cli("--skip", nargs="*", default=[], help="commands to skip")
