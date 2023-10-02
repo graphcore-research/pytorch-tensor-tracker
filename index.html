@@ -27,7 +27,7 @@
 as usual. Your <code><a title="tensor_tracker.Tracker" href="#tensor_tracker.Tracker">Tracker</a></code> will be filled with a list of <code><a title="tensor_tracker.Stash" href="#tensor_tracker.Stash">Stash</a></code>es, containing
 copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
 a lot of memory.)</p>
-<p>Usage:</p>
+<p>Usage (<a href="usage.html">notebook</a>):</p>
 <pre><code>with tensor_tracker.track(model) as tracker:
     model(inputs).backward()
 
@@ -56,8 +56,8 @@ display(tracker.to_frame())  # requires 'pandas'
 <code>tracker = Tracker(); tracker.register(...); tracker.unregister()</code></p>
 </li>
 </ul>
-<p>See also: example of
-<a href="example.html">visualising transformer activations &amp; gradients using UMAP</a>.</p>
+<p>See also: <a href="example.html">example of
+visualising transformer activations &amp; gradients using UMAP</a>.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -159,7 +159,7 @@ from .core import __all__, __doc__  # NOQA: F401</code></pre>
 as usual. Your <code><a title="tensor_tracker.Tracker" href="#tensor_tracker.Tracker">Tracker</a></code> will be filled with a list of <code><a title="tensor_tracker.Stash" href="#tensor_tracker.Stash">Stash</a></code>es, containing
 copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
 a lot of memory.)</p>
-<p>Usage:</p>
+<p>Usage (<a href="usage.html">notebook</a>):</p>
 <pre><code>with tensor_tracker.track(model) as tracker:
     model(inputs).backward()
 
@@ -188,8 +188,8 @@ display(tracker.to_frame())  # requires 'pandas'
 <code>tracker = Tracker(); tracker.register(...); tracker.unregister()</code></p>
 </li>
 </ul>
-<p>See also: example of
-<a href="example.html">visualising transformer activations &amp; gradients using UMAP</a>.</p></div>
+<p>See also: <a href="example.html">example of
+visualising transformer activations &amp; gradients using UMAP</a>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -423,16 +423,21 @@ def first_value(self) -&gt; Any:
         return len(self.stashes)
 
     def to_frame(
-        self, stat: Callable[[Tensor], Tensor] = torch.std
+        self,
+        stat: Callable[[Tensor], Tensor] = torch.std,
+        stat_name: Optional[str] = None,
     ) -&gt; &#34;pandas.DataFrame&#34;:  # type:ignore[name-defined] # NOQA: F821
         import pandas
 
+        column_name = (
+            getattr(stat, &#34;__name__&#34;, &#34;value&#34;) if stat_name is None else stat_name
+        )
+
         def to_item(stash: Stash) -&gt; Dict[str, Any]:
             d = stash.__dict__.copy()
-            first_value = stash.first_value
-            d[&#34;value&#34;] = (
-                stat(first_value).item() if isinstance(first_value, Tensor) else None
-            )
+            d.pop(&#34;value&#34;)
+            v = stash.first_value
+            d[column_name] = stat(v).item() if isinstance(v, Tensor) else None
             d[&#34;type&#34;] = f&#34;{stash.type.__module__}.{stash.type.__name__}&#34;
             return d
 
@@ -502,7 +507,7 @@ def first_value(self) -&gt; Any:
 </details>
 </dd>
 <dt id="tensor_tracker.Tracker.to_frame"><code class="name flex">
-<span>def <span class="ident">to_frame</span></span>(<span>self, stat: Callable[[torch.Tensor], torch.Tensor] = &lt;built-in method std of type object&gt;) ‑> pandas.DataFrame</span>
+<span>def <span class="ident">to_frame</span></span>(<span>self, stat: Callable[[torch.Tensor], torch.Tensor] = &lt;built-in method std of type object&gt;, stat_name: Optional[str] = None) ‑> pandas.DataFrame</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -511,16 +516,21 @@ def first_value(self) -&gt; Any:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def to_frame(
-    self, stat: Callable[[Tensor], Tensor] = torch.std
+    self,
+    stat: Callable[[Tensor], Tensor] = torch.std,
+    stat_name: Optional[str] = None,
 ) -&gt; &#34;pandas.DataFrame&#34;:  # type:ignore[name-defined] # NOQA: F821
     import pandas
 
+    column_name = (
+        getattr(stat, &#34;__name__&#34;, &#34;value&#34;) if stat_name is None else stat_name
+    )
+
     def to_item(stash: Stash) -&gt; Dict[str, Any]:
         d = stash.__dict__.copy()
-        first_value = stash.first_value
-        d[&#34;value&#34;] = (
-            stat(first_value).item() if isinstance(first_value, Tensor) else None
-        )
+        d.pop(&#34;value&#34;)
+        v = stash.first_value
+        d[column_name] = stat(v).item() if isinstance(v, Tensor) else None
         d[&#34;type&#34;] = f&#34;{stash.type.__module__}.{stash.type.__name__}&#34;
         return d
 
