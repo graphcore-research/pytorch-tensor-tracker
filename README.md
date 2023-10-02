@@ -19,7 +19,9 @@ print(list(tracker))
 display(tracker.to_frame())
 ```
 
-See our example of [visualising transformer activations & gradients using UMAP](tests/Example.ipynb).
+![tensor tracker to_frame output](doc/usage_to_frame.png)
+
+See our [example of visualising transformer activations & gradients using UMAP](doc/Example.ipynb).
 
 ## License
 

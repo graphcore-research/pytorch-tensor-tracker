@@ -8,7 +8,7 @@ __pycache__
 
 /build
 /dist
-/doc
+/doc/tensor_tracker
 /local
 
 *.egg-info/
