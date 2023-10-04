@@ -1,6 +1,6 @@
 # Tensor tracker
 
-[API documentation](https://graphcore-research.github.io/pytorch-tensor-tracker/) | [Example](https://graphcore-research.github.io/pytorch-tensor-tracker/usage.html)
+[API documentation](https://graphcore-research.github.io/pytorch-tensor-tracker/) | [Example](doc/Usage.ipynb)
 
 Flexibly track outputs and grad-outputs of `torch.nn.Module`.
 
@@ -37,7 +37,7 @@ display(tracker.to_frame())
 
 <img src="doc/usage_to_frame.png" alt="tensor tracker to_frame output" style="width:30em;"/>
 
-See the [documentation](https://graphcore-research.github.io/pytorch-tensor-tracker/) for more info, or for a more practical example, see our demo of [visualising transformer activations & gradients using UMAP](doc/Example.ipynb).
+See the [documentation](https://graphcore-research.github.io/pytorch-tensor-tracker/) for more info, or for a more practical example, see our demo of [visualising transformer activations & gradients using UMAP](doc/Example.ipynb). To use on IPU with PopTorch, please see [Usage (PopTorch)](doc/UsagePopTorch.ipynb).
 
 
 ## License
