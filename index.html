@@ -23,7 +23,7 @@
 </header>
 <section id="section-intro">
 <p>Utility for tracking activations and gradients at <code>nn.Module</code> outputs.</p>
-<p>Use <code><a title="tensor_tracker.track" href="#tensor_tracker.track">track()</a></code> to start tracking a module &amp; submodule. Then use the original module
+<p>Use <code><a title="tensor_tracker.track" href="#tensor_tracker.track">track()</a></code> to start tracking a module &amp; submodules. Then use the original module
 as usual. Your <code><a title="tensor_tracker.Tracker" href="#tensor_tracker.Tracker">Tracker</a></code> will be filled with a list of <code><a title="tensor_tracker.Stash" href="#tensor_tracker.Stash">Stash</a></code>es, containing
 copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
 a lot of memory.)</p>
@@ -155,7 +155,7 @@ from .core import __all__, __doc__  # NOQA: F401</code></pre>
 </code></dt>
 <dd>
 <div class="desc"><p>Utility for tracking activations and gradients at <code>nn.Module</code> outputs.</p>
-<p>Use <code><a title="tensor_tracker.track" href="#tensor_tracker.track">track()</a></code> to start tracking a module &amp; submodule. Then use the original module
+<p>Use <code><a title="tensor_tracker.track" href="#tensor_tracker.track">track()</a></code> to start tracking a module &amp; submodules. Then use the original module
 as usual. Your <code><a title="tensor_tracker.Tracker" href="#tensor_tracker.Tracker">Tracker</a></code> will be filled with a list of <code><a title="tensor_tracker.Stash" href="#tensor_tracker.Stash">Stash</a></code>es, containing
 copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
 a lot of memory.)</p>

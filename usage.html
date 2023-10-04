@@ -7331,7 +7331,7 @@ a.anchor-link {
     if (!diagrams.length) {
       return;
     }
-    const mermaid = (await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.1/mermaid.esm.min.mjs")).default;
+    const mermaid = (await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.esm.min.mjs")).default;
     const parser = new DOMParser();
 
     mermaid.initialize({
@@ -7483,7 +7483,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Copyright (c) 2023 Graphcore Ltd. All rights reserved.</p>
-<h1 id="Usage-example">Usage example<a class="anchor-link" href="#Usage-example">¶</a></h1><p>General setup:</p>
+<h1 id="Usage-example">Usage example<a class="anchor-link" href="#Usage-example">¶</a></h1><p>Create a toy model to track:</p>
 </div>
 </div>
 </div>
@@ -7524,7 +7524,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Using <code>tensor_tracker</code>:</p>
+<p>Use <code>tensor_tracker</code> to capture forward pass activations and backward pass gradients from our toy model. By default, the tracker saves full tensors, as a list of <code>tensor_tracker.Stash</code> objects.</p>
 </div>
 </div>
 </div>
@@ -7541,11 +7541,47 @@ a.anchor-link {
 <span class="k">with</span> <span class="n">tensor_tracker</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="k">as</span> <span class="n">tracker</span><span class="p">:</span>
     <span class="n">module</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">tracker</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Tracker(stashes=8, tracking=0)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Note that calls are only tracked within the <code>with</code> context. Then, the tracker behaves like a list of <code>Stash</code> objects, with attached <code>name</code>, <code>value</code> etc.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">tracker</span><span class="p">))</span>
 <span class="c1"># =&gt; [Stash(name="embed", type=nn.Embedding, grad=False, value=tensor(...)),</span>
 <span class="c1">#     ...]</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">to_frame</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -7559,27 +7595,64 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>[Stash(name='embed', type=&lt;class 'torch.nn.modules.sparse.Embedding'&gt;, grad=False, value=tensor([[ 0.4698,  1.2426,  0.5403, -1.1454],
-        [-0.8425, -0.6475, -0.2189, -1.1326],
-        [ 0.1268,  1.3564,  0.5632, -0.1039]])), Stash(name='project', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=False, value=tensor([[-0.6237, -0.1652,  0.3782, -0.8841],
-        [-0.9278, -0.2848, -0.8688, -0.4719],
-        [-0.3449,  0.3643,  0.3935, -0.6302]])), Stash(name='unembed', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=False, value=tensor([[-0.2458,  1.0003, -0.8231, -0.1405, -0.2964,  0.5837,  0.2889,  0.2059,
-         -0.6114, -0.5916],
-        [-0.6345,  1.0882, -0.4304, -0.2196, -0.0426,  0.9428,  0.2051,  0.5897,
-         -0.2217, -0.9132],
-        [-0.0822,  0.9985, -0.7097, -0.3139, -0.4805,  0.6878,  0.2560,  0.3254,
-         -0.4447, -0.3332]])), Stash(name='', type=&lt;class '__main__.Model'&gt;, grad=False, value=tensor(2.5663)), Stash(name='', type=&lt;class '__main__.Model'&gt;, grad=True, value=(tensor(1.),)), Stash(name='unembed', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=True, value=(tensor([[ 0.0237,  0.0824, -0.3200,  0.0263,  0.0225,  0.0543,  0.0404,  0.0372,
-          0.0164,  0.0168],
-        [ 0.0139,  0.0779,  0.0171,  0.0211,  0.0251,  0.0673,  0.0322, -0.2860,
-          0.0210,  0.0105],
-        [-0.3066,  0.0787,  0.0143,  0.0212,  0.0179,  0.0577,  0.0374,  0.0401,
-          0.0186,  0.0208]]),)), Stash(name='project', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=True, value=(tensor([[-0.1755,  0.1306,  0.0443, -0.1823],
-        [ 0.1202, -0.0728,  0.0066, -0.0839],
-        [-0.1863,  0.0470, -0.1055, -0.0353]]),)), Stash(name='embed', type=&lt;class 'torch.nn.modules.sparse.Embedding'&gt;, grad=True, value=(tensor([[-0.0108,  0.1086, -0.1304, -0.0370],
-        [ 0.0534, -0.0029,  0.0078, -0.0074],
-        [-0.0829,  0.0152, -0.1170, -0.0625]]),))]
-</pre>
+         [-0.8425, -0.6475, -0.2189, -1.1326],
+         [ 0.1268,  1.3564,  0.5632, -0.1039]])),
+ Stash(name='project', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=False, value=tensor([[-0.6237, -0.1652,  0.3782, -0.8841],
+         [-0.9278, -0.2848, -0.8688, -0.4719],
+         [-0.3449,  0.3643,  0.3935, -0.6302]])),
+ Stash(name='unembed', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=False, value=tensor([[-0.2458,  1.0003, -0.8231, -0.1405, -0.2964,  0.5837,  0.2889,  0.2059,
+          -0.6114, -0.5916],
+         [-0.6345,  1.0882, -0.4304, -0.2196, -0.0426,  0.9428,  0.2051,  0.5897,
+          -0.2217, -0.9132],
+         [-0.0822,  0.9985, -0.7097, -0.3139, -0.4805,  0.6878,  0.2560,  0.3254,
+          -0.4447, -0.3332]])),
+ Stash(name='', type=&lt;class '__main__.Model'&gt;, grad=False, value=tensor(2.5663)),
+ Stash(name='', type=&lt;class '__main__.Model'&gt;, grad=True, value=(tensor(1.),)),
+ Stash(name='unembed', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=True, value=(tensor([[ 0.0237,  0.0824, -0.3200,  0.0263,  0.0225,  0.0543,  0.0404,  0.0372,
+           0.0164,  0.0168],
+         [ 0.0139,  0.0779,  0.0171,  0.0211,  0.0251,  0.0673,  0.0322, -0.2860,
+           0.0210,  0.0105],
+         [-0.3066,  0.0787,  0.0143,  0.0212,  0.0179,  0.0577,  0.0374,  0.0401,
+           0.0186,  0.0208]]),)),
+ Stash(name='project', type=&lt;class 'torch.nn.modules.linear.Linear'&gt;, grad=True, value=(tensor([[-0.1755,  0.1306,  0.0443, -0.1823],
+         [ 0.1202, -0.0728,  0.0066, -0.0839],
+         [-0.1863,  0.0470, -0.1055, -0.0353]]),)),
+ Stash(name='embed', type=&lt;class 'torch.nn.modules.sparse.Embedding'&gt;, grad=True, value=(tensor([[-0.0108,  0.1086, -0.1304, -0.0370],
+         [ 0.0534, -0.0029,  0.0078, -0.0074],
+         [-0.0829,  0.0152, -0.1170, -0.0625]]),))]</pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>As a higher-level API, <code>to_frame</code> computes summary statistics, defaulting to <code>torch.std</code>.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">to_frame</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
