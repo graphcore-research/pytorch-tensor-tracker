@@ -2,7 +2,7 @@
 
 """Utility for tracking activations and gradients at `nn.Module` outputs.
 
-Use `track` to start tracking a module & submodule. Then use the original module
+Use `track` to start tracking a module & submodules. Then use the original module
 as usual. Your `Tracker` will be filled with a list of `Stash`es, containing
 copies of fwd/bwd tensors at (sub)module outputs. (Beware, this can consume
 a lot of memory.)
