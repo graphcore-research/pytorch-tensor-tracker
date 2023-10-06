@@ -1,0 +1,14 @@
+{
+    "build": {
+        "dockerfile": ".devcontainer.dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+				"ms-python.python",
+				"ms-toolsai.jupyter",
+				"ms-python.isort"
+			]
+        }
+    }
+}
